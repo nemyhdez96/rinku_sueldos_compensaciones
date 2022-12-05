@@ -1,10 +1,14 @@
 from django.urls import path
-from rol.views.views import *
+from rol.web_service.rol import lista
 
 app_name = 'rol'
 
-urlpatterns = [
-    path('index/', index, name='index'),
-    path('crear/', index, name='index'),
-    # path('index/', index, name='index'),
+URL_VIEWS = [
+    # path('index', index, name='index'),
 ]
+
+URL_WS = [
+    path('lista/', lista, name='lista'),
+]
+
+urlpatterns = URL_VIEWS + URL_WS

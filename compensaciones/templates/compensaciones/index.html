@@ -9,7 +9,7 @@
                 <a href="#">Inicio</a>
             </li>
             <li class="breadcrumb-item active">
-                <strong>Empleados</strong>
+                <strong>Compensaciones</strong>
             </li>
         </ol>
     </div>
@@ -19,11 +19,11 @@
         <div class="col-lg-12"> 
             <div class="ibox ">
                 <div class="ibox-title">
-                    <h5>Lista de suldos y compensaciones </h5>
+                    <h5>Compensaciones y sueldos</h5>
                 </div>
                 <div class="ibox-content">
                     <div class="table-responsive">
-                        <table id="tabla_empleados" class="table table-hover" width="100%">
+                        <table id="tabla_compensaciones" class="table table-hover" width="100%">
                         </table>
                     </div>
                 </div>
@@ -40,10 +40,10 @@
              <button type="button" class="close cerar_modal_crear_editar" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
                      class="sr-only">Close</span></button>
  
-             <h4 class="modal-title" id="modal_titulo"></h4>
+             <h4 class="modal-title" id="modal_titulo">Captura de movimientos por mes</h4>
           </div>
           <div class="modal-body">
-             <div class="ibox">
+             <div class="ibox ibox-modal">
                 <div class="ibox-content ibox-content-modal">
                     <div class="sk-spinner sk-spinner-wave">
                         <div class="sk-rect1"></div>
@@ -55,22 +55,40 @@
                     <div class="row">
                         <div class="col-sm-12 b-r">
                             <form role="form" id="form_crear_editar">
-                                <input type="hidden" placeholder="Id" class="form-control" name="empleado_id" id="empleado_id">
                                 <div class="form-group">
-                                    <label>Nombre</label> 
-                                    <input type="text" placeholder="Nombre" class="form-control" name="empleado_nombre" id="empleado_nombre">
+                                    <label>Número de empleado</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="empleado_numero" id="empleado_numero"> 
+                                        <span class="input-group-append"> 
+                                            <button type="button" class="btn btn-primary" id="btn_buscar_numero"><i class="fa fa-search"></i> Ir!</button> 
+                                        </span>
+                                    </div>
                                 </div>
                                 <div class="form-group">
-                                    <label>Apellido paterno</label>
-                                    <input type="text" placeholder="Apellido paterno" class="form-control" name="empleado_paterno" id="empleado_paterno"></div>
-                                <div class="form-group">
-                                    <label>Apellido materno</label>
-                                    <input type="text" placeholder="Apellido materno" class="form-control" name="empleado_materno" id="empleado_materno"></div>
+                                    <label>Nombre</label> 
+                                    <input disabled type="text" placeholder="Nombre" class="form-control" name="empleado_nombre" id="empleado_nombre">
+                                </div>
                                 <div class="form-group">
                                     <label>Rol</label>
-                                    <select class="form-control" name="empleado_rol_id" id="empleado_rol_id">
+                                    <input disabled type="text" placeholder="Rol" class="form-control" name="empleado_rol" id="empleado_rol">
+                                </div>
+                            </form>
+                            <form role="form" id="form_guardar">
+                                <input type="hidden" placeholder="Id compensación" class="form-control" name="c_id" id="c_id">
+                                <input type="hidden" placeholder="Id empleado" class="form-control" name="empleado_id" id="empleado_id">
+                                <input type="hidden" placeholder="Id rol" class="form-control" name="rol_id" id="rol_id">
+                                <input type="hidden" placeholder="Id rol" class="form-control" name="rol_nombre" id="rol_nombre">
+                                <div class="form-group">
+                                    <label>Mes</label>
+                                    <select class="form-control" name="c_mes" id="c_mes">
                                         <option value="" >Seleccione una opción</option>
+                                        <option value="1" >Enero</option>
                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Cantidad de entregas</label>
+                                    <input type="text" placeholder="Cantidad de entregas" class="form-control cjs-mask-numero" name="c_cantidad" id="c_cantidad">
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -90,11 +108,10 @@
 {% endblock %}
 {% block js %}
     <script>
-        urlListaEmpleadp = "{% url 'empleados:lista'%}";
-        urlCerearEditar = "{% url 'empleados:crear_editar'%}";
-        urlEliminar = "{% url 'empleados:eliminar'%}";
-        urlRoles = "{% url 'rol:lista'%}";
+        urlListaCompensaciones = "{% url 'compensaciones:lista'%}";
+        urlBuscarEmpleado = "{% url 'empleados:lista'%}";
+        urlCerear = "{% url 'compensaciones:crear'%}";
         csrf_token = '{{csrf_token }}'
     </script>
-    <script async defer src="{% static 'js/empleados/index.js' %}"></script>
+    <script async defer src="{% static 'js/compensaciones/index.js' %}"></script>
 {% endblock  %}

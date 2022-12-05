@@ -24,12 +24,13 @@ $(document).ready(function(){
             }
         },
         columns: [
+            {'data': 'numero', title: 'Numero de empleado'},
             {'data': 'nombre_completo', title: 'Nombre'},
+            {'data': 'rol_descripcion', title: 'Rol'},
             {'data': 'activo', title: 'Activo'},
-            {'data': 'rol_id', title: 'Rol'},
             {'data': 'opciones', title: ''},
-            ],
-            "order" : [[ 0, "asc" ]],
+        ],
+        "order" : [[ 0, "asc" ]],
         buttons: [
             {
             extend: 'collection',
@@ -48,7 +49,7 @@ $(document).ready(function(){
     });
     
     fnFormValidate();
-    // fnIniciarEventos()
+    fnObtenerRol();
 });
 
 
@@ -165,5 +166,33 @@ function fnLimpiarModalCrearEditar(){
     $("#empleado_paterno").val("");
     $("#empleado_materno").val("");
     $("#empleado_rol_id").val("");
+}
+
+function fnObtenerRol(){
+    let form_data = new FormData();
+    form_data.append("csrfmiddlewaretoken", csrf_token);
+    $.ajax({
+        url: urlRoles,
+        method: "POST",
+        data:form_data,
+        processData: false,
+        contentType: false,
+        dataType: "JSON",
+        success: function (respuesta) {
+        if (respuesta.exito) {
+            for (const item of respuesta.data) {
+                $("#empleado_rol_id").append(`
+                    <option value="${item.id}" >${item.descripcion}</option>
+                `);
+            }
+
+        } else {
+            swal("Advertencia", respuesta?.mensaje, "warning");
+        }
+        },
+        error: function(e){
+            swal("Advertencia", "Servicio no disponible.", "warning");
+        }
+    });
 }
 
