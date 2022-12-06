@@ -1,0 +1,181 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block contenedor %}
+<div class="row wrapper border-bottom white-bg page-heading mt-2 pt-3 pb-3">
+    <div class="col-lg-10">
+        {% comment %} <h2>Empleados</h2> {% endcomment %}
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="#">Inicio</a>
+            </li>
+            <li class="breadcrumb-item active">
+                <strong>Compensaciones</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-lg-12"> 
+            <div class="ibox ">
+                <div class="ibox-title">
+                    <h5>Lista de suldos y compensaciones</h5>
+                </div>
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table id="tabla_compensaciones" class="table table-hover" width="100%">
+                        </table>
+                    </div>
+                </div>
+            </div>          
+        </div>
+    </div>
+</div>
+
+<!--inicio modal crear-->
+<div class="modal inmodal" id="modal_crear_editar" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+       <div class="modal-content">
+          <div class="modal-header">
+             <button type="button" class="close cerar_modal_crear_editar" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                     class="sr-only">Close</span></button>
+ 
+             <h4 class="modal-title" id="modal_titulo">Captura de movimientos por mes</h4>
+          </div>
+          <div class="modal-body">
+             <div class="ibox ibox-modal">
+                <div class="ibox-content ibox-content-modal">
+                    <div class="sk-spinner sk-spinner-wave">
+                        <div class="sk-rect1"></div>
+                        <div class="sk-rect2"></div>
+                        <div class="sk-rect3"></div>
+                        <div class="sk-rect4"></div>
+                        <div class="sk-rect5"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 b-r">
+                            <form role="form" id="form_crear_editar">
+                                <div class="form-group">
+                                    <label>Número de empleado</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="empleado_numero" id="empleado_numero"> 
+                                        <span class="input-group-append"> 
+                                            <button type="button" class="btn btn-primary" id="btn_buscar_numero"><i class="fa fa-search"></i> Ir!</button> 
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Nombre</label> 
+                                    <input disabled type="text" placeholder="Nombre" class="form-control" name="empleado_nombre" id="empleado_nombre">
+                                </div>
+                                <div class="form-group">
+                                    <label>Rol</label>
+                                    <input disabled type="text" placeholder="Rol" class="form-control" name="empleado_rol" id="empleado_rol">
+                                </div>
+                            </form>
+                            <form role="form" id="form_guardar">
+                                <input type="hidden" placeholder="Id compensación" class="form-control" name="c_id" id="c_id">
+                                <input type="hidden" placeholder="Id empleado" class="form-control" name="empleado_id" id="empleado_id">
+                                <input type="hidden" placeholder="Id rol" class="form-control" name="rol_id" id="rol_id">
+                                <input type="hidden" placeholder="Id rol" class="form-control" name="rol_nombre" id="rol_nombre">
+                                <div class="form-group">
+                                    <label>Mes</label>
+                                    <select class="form-control" name="c_mes" id="c_mes">
+                                        <option value="" >Seleccione una opción</option>
+                                        
+                                   </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Cantidad de entregas</label>
+                                    <input type="text" placeholder="Cantidad de entregas" class="form-control cjs-mask-numero" name="c_cantidad" id="c_cantidad">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+             
+          </div>
+          <div class="modal-footer">
+             <button type="button" class="btn btn-white cerar_modal_crear_editar" data-dismiss="modal" >Cancelar</button>
+             <button type="button" class="btn btn-info" id="btn_nuevo_modal">Nuevo</button>
+             <button type="button" class="btn btn-primary" id="btn_guardar">Guardar</button>
+          </div>
+       </div>
+    </div>
+ </div>
+ <!--FIn modal crear -->
+
+ <!--inicio modal filtrar-->
+<div class="modal inmodal" id="modal_filtro" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+       <div class="modal-content">
+          <div class="modal-header">
+             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                     class="sr-only">Close</span></button>
+ 
+             <h4 class="modal-title">Búsqueda avanzada</h4>
+          </div>
+          <div class="modal-body">
+             <div class="ibox" id="ibox-modal-tasa">
+                <div class="ibox-content ibox-content-modal">
+                    <div class="sk-spinner sk-spinner-wave">
+                        <div class="sk-rect1"></div>
+                        <div class="sk-rect2"></div>
+                        <div class="sk-rect3"></div>
+                        <div class="sk-rect4"></div>
+                        <div class="sk-rect5"></div>
+                    </div>
+                    <form id="form_filtro">
+                        <div class="form-group">
+                            <label>Cantidad de entregas</label>
+                            <input type="text" placeholder="Cantidad de entregas" class="form-control cjs-mask-numero" name="c_cantidad" id="c_cantidad">
+                        </div>
+                        <div class="form-group">
+                            <label>Mes</label>
+                            <select class="form-control" name="c_mes" id="c_mes_f">
+                                <option value="" >Seleccione una opción</option>
+                                
+                           </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Empleado</label>
+                            <select class="form-control" name="c_empleado" id="c_empleado">
+                                <option value="" >Seleccione una opción</option>
+                                
+                           </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Rol</label>
+                            <select class="form-control" name="empleado_rol_id" id="empleado_rol_id">
+                                <option value="" >Seleccione una opción</option>
+                                
+                           </select>
+                        </div>
+                   </form>
+                    </div>
+                   </div>
+             
+          </div>
+          <div class="modal-footer">
+             <button type="button" class="btn btn-white" id="btn-limpiar"><i class="fa fa-eraser" aria-hidden="true"></i>Limpiar</button>
+             <button type="button" class="btn btn-primary" id="btn-filtrar"><i class="fa fa-filter"></i>Filtrar</button>
+          </div>
+       </div>
+    </div>
+ </div>
+ <!--FIn modal filtro -->
+
+ {% endblock %}
+{% block js %}
+    <script>
+        urlListaCompensaciones = "{% url 'compensaciones:lista'%}";
+        urlBuscarEmpleado = "{% url 'empleados:lista'%}";
+        urlBuscarMeses = "{% url 'compensaciones:lista-mes'%}";
+        urlCerear = "{% url 'compensaciones:crear'%}";
+        urlRoles = "{% url 'rol:lista'%}";
+        urlEliminar = "{% url 'compensaciones:eliminar'%}";
+        csrf_token = '{{csrf_token }}'
+    </script>
+    <script async defer src="{% static 'js/compensaciones/index.js' %}"></script>
+{% endblock  %}
