@@ -310,11 +310,13 @@ function fnObtenerMeses(){
 }
 
 function fnFiltrar(){ 
+    $('.cjs-mask-numero').unmask();
     filtro.e_rol_id = $("#empleado_rol_id").val();
     filtro.c_empleado_id = $("#c_empleado").val();
-    filtro.c_entrega = $("#c_cantidad").val();
+    filtro.c_entrega = $("#c_cantidad_f").val();
     filtro.c_mes = $("#c_mes_f").val();
     tabla_compensaciones.ajax.reload();
+    $('.cjs-mask-numero').mask('#,##0', {reverse: true});
     $("#modal_filtro").modal('hide');
 }
 
