@@ -138,26 +138,50 @@ function fnEliminarEmpleado(){
     let data = tabla_usuarios.row($(this).parents("tr")).data()
     let form_data = new FormData();
     form_data.append("empleado_id", data.id);
-    $.ajax({
-        url: urlEliminar,
-        method: "POST",
-        data:form_data,
-        processData: false,
-        contentType: false,
-        dataType: "JSON",
-        success: function (respuesta) {
-        if (respuesta.exito) {
-            swal(respuesta?.mensaje, "", "success");
-            tabla_usuarios.ajax.reload()
+    form_data.append("csrfmiddlewaretoken", csrf_token);
+    swal({
+        title:"¿Esta seguro de eliminar el registro?",
+        text:`Empleado ${data.nombre_completo} con #: ${data.numero}`,
+        type:"warning",
+        showCancelButton:true,
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: "Sí, Eliminar",
+        cancelButtonText: "No, cancelar",
+        closeOnConfirm: false,
+        closeOnCancel: false
+     },
+     function(confirm){
+        if(confirm){
+            $.ajax({
+                url: urlEliminar,
+                method: "POST",
+                data:form_data,
+                processData: false,
+                contentType: false,
+                dataType: "JSON",
+                success: function (respuesta) {
+                if (respuesta.exito) {
+                    swal(respuesta?.mensaje, "", "success");
+                    tabla_usuarios.ajax.reload()
+        
+                } else {
+                    swal("Advertencia", respuesta?.mensaje, "warning");
+                }
+                },
+                error: function(e){
+                    swal("Advertencia", "Servicio no disponible.", "warning");
+                }
+            });
+        }else{
+           swal({
+              title:"Proceso cancelado",
+              text:" ",
+              type:"error",
+              timer: 2000,
+           });
+        }
 
-        } else {
-            swal("Advertencia", respuesta?.mensaje, "warning");
-        }
-        },
-        error: function(e){
-            swal("Advertencia", "Servicio no disponible.", "warning");
-        }
-    });
+     });
 }
 
 function fnLimpiarModalCrearEditar(){

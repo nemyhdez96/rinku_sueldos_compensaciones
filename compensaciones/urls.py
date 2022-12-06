@@ -11,7 +11,8 @@ URL_VIEWS = [
 URL_WS = [
     path('lista/', lista, name='lista'),
     path('crear/', crear, name='crear'),
-    # path('eliminar/', eliminar, name='eliminar'),
+    path('mes/lista/', get_menes, name='lista-mes'),
+    path('eliminar/', eliminar, name='eliminar'),
 ]
 
 urlpatterns = URL_VIEWS + URL_WS

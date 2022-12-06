@@ -18,9 +18,10 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from compensaciones.views.compensaciones import inicio
 
 urlpatterns = [
-    
+    path('', inicio, name="inicio"),
     path('admin/', admin.site.urls),
     path('empleados/', include('empleados.urls')),
     path('compensaciones/', include('compensaciones.urls')),

@@ -17,7 +17,6 @@ def lista(request):
     empleado_materno = request.data.get("empleado_materno", '') if request.data.get("empleado_materno", '') else ''
     empleado_rol_id = request.data.get("empleado_rol_id", -99) if request.data.get("empleado_rol_id", -99) else -99
     empleado_numero = request.data.get("empleado_numero", '') if request.data.get("empleado_numero", '') else ''
-    print("empleado_numero ", empleado_numero)
     empleado_activo = True
     busqueda = request.data.get("search[value]", '') if request.data.get("search[value]", '') else ''
     start = request.data.get("start", 0) if request.data.get("start", 0) else 0
@@ -51,7 +50,6 @@ def lista(request):
         );    
     """.format(**dict_param)
     with connections['default'].cursor() as cursor:
-        print("query ", query)
         cursor.execute(query)
         empleados = dictfetchall(cursor)
         if empleados:

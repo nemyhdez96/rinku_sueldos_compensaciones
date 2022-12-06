@@ -9,6 +9,8 @@ from modules.funciones import dictfetchall
 from compensaciones.modules.funciones import opciones_compensaciones
 from compensaciones.modules.variables_constantes import *
 
+from json import loads
+
 
 @api_view(["POST"])
 def lista(request):
@@ -16,29 +18,33 @@ def lista(request):
     start = request.data.get("start", 0) if request.data.get("start", 0) else 0
     limite = request.data.get("length", 10) if request.data.get("length", 10) else 10
     draw = request.data.get("draw", 1) if request.data.get("draw", 1) else 1 
-    
-    filtro = request.data.get("filtro", {})
-    c_id = filtro.get("c_id", -99)
-    
+    busqueda = request.data.get("search[value]", '') if request.data.get("search[value]", '') else ''
+    filtro = loads(request.data.get("filtro", "{}"))
+    c_id = filtro.get("c_id", -99) if filtro.get("c_id", -99) else -999
+    c_entrega=filtro.get("c_entrega", -99) if filtro.get("c_entrega", -99) else -99
+    c_mes=filtro.get("c_mes", -99) if filtro.get("c_mes", -99) else -99
+    c_empleado_id=filtro.get("c_empleado_id", -99) if filtro.get("c_empleado_id", -99) else -99
+    e_rol_id=filtro.get("e_rol_id", -99) if filtro.get("e_rol_id", -99) else -99
+    dict_parametros = dict(
+        c_id=c_id,
+        c_entrega=c_entrega,
+        c_mes=c_mes,
+        c_empleado_id=c_empleado_id,
+        e_rol_id=e_rol_id,
+        busqueda=busqueda
+    )
     query_compensaciones = """
         select * from p_conpensaciones_b(
-        c_id := -99,
-        c_sueldo_bruto := -99,
-        c_sueldo_neto := -99,
-        c_bono_entrega := -99,
-        c_bono_horas := -99,
-        c_isr := -99,
-        c_vales_despensa := -99,
-        c_entrega := -99,
-        c_mes := -99,
-        c_empleado_id := -99,
-        e_rol_id := -99,
-        e_activo := true,
-        busqueda := '',
+        c_id := {c_id},
+        c_entrega := {c_entrega},
+        c_mes := {c_mes},
+        c_empleado_id := {c_empleado_id},
+        e_rol_id := {e_rol_id},
+        busqueda := '{busqueda}',
         limite := 10,
         start := 0
         );
-    """
+    """.format(**dict_parametros)
     with connections['default'].cursor() as cursor:
         cursor.execute(query_compensaciones)
         compensaciones = dictfetchall(cursor)
@@ -143,3 +149,56 @@ def crear(request):
             status=HTTP_200_OK
         )
 
+@api_view(["GET"])
+def get_menes(request):
+    meses = MESES
+    
+    return Response(
+            dict(
+                exito=True,
+                mensaje="Datos encontrados.", 
+                data=meses
+            ),
+            status=HTTP_200_OK
+        )
+    
+@api_view(["POST"])
+def eliminar(request):
+    # Metodo para deshabilitar (eliminar) compensaciones
+    try:
+        compensacion_id = request.data.get("compensacion_id", None)
+        if not compensacion_id:
+            return Response(
+                    dict(
+                        exito=False,
+                        mensaje="Regitro no encontrado.", 
+                    ),
+                    status=HTTP_200_OK
+                )
+        dict_query_eliminar = dict(
+                compensacion_id=int(compensacion_id)
+            )
+        query_eliminar = """
+            SELECT p_compensaciones_d(
+                {compensacion_id}
+            );
+        """.format(**dict_query_eliminar)
+        with connections['default'].cursor() as cursor:
+            cursor.execute(query_eliminar)
+            compensacion_eliminado = cursor.fetchone()
+            compensacion_id = compensacion_eliminado[0]
+        return Response(
+            dict(
+                exito=True,
+                mensaje="Eliminado."
+            ),
+            status=HTTP_200_OK
+        )
+    except Exception as e:
+        return Response(
+            dict(
+                exito=True,
+                mensaje="Intentelo más tarde."
+            ),
+            status=HTTP_200_OK
+        )
