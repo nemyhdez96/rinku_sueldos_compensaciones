@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'rest_framework',
     'empleados',
@@ -49,6 +50,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -132,8 +134,8 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
-    os.path.join(f"{BASE_DIR}/empleados", 'static'),
-    os.path.join(f"{BASE_DIR}/compensaciones", 'static'),
+    os.path.join(f"{BASE_DIR}", 'static'),
+    os.path.join(f"{BASE_DIR}", 'static'),
 )
 STATIC_ROOT = os.path.join(BASE_DIR, 'static_cdn')
 # Default primary key field type
